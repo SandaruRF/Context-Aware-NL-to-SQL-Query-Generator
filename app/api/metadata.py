@@ -3,6 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import Session
 from app.core.database import get_db, get_metadata
+import re
 
 router = APIRouter()
 
@@ -15,7 +16,7 @@ async def get_db_metadata(db: Session = Depends(get_db)):
     for table_name, table in metadata.tables.items():
         column_data = [
             {"column_name": column.name, 
-             "data_type": str(column.type)}
+             "data_type": re.sub(r' COLLATE ".*"', '', str(column.type))}
             for column in table.columns
         ]
 
