@@ -13,16 +13,27 @@ async def get_db_metadata(db: Session = Depends(get_db)):
     tables_info = []
 
     for table_name, table in metadata.tables.items():
-        columns = [column.name for column in table.columns]
+        column_data = [
+            {"column_name": column.name, 
+             "data_type": str(column.type)}
+            for column in table.columns
+        ]
+
+        primary_keys = [
+            pk.name for pk in table.primary_key.columns
+        ]
 
         foreign_keys = [
-            {"column": fk.column.name, "referenced_table": fk.target_fullname}
+            {"local_column": fk.parent.name, 
+             "referenced_table": fk.column.table.name,
+             "referenced_column": fk.column.name}
             for fk in table.foreign_keys
         ]
 
         tables_info.append({
             "table_name": table_name,
-            "columns": columns,
+            "columns": column_data,
+            "primary_keys": primary_keys,
             "foreign_keys": foreign_keys
         })
 
