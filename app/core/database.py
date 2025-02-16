@@ -1,11 +1,17 @@
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, close_all_sessions
+from sqlalchemy.exc import SQLAlchemyError
 from app.core.config import DATABASE_URL
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 if DATABASE_URL is None:
+    logger.error("DATABASE_URL environment variable is not set!")
     raise ValueError("DATABASE_URL environment variable is not set!")
 
-print(f"Using database URL: {DATABASE_URL}")
+logger.info(f"Using database URL: {DATABASE_URL}")
 
 # Close all previous database sessions to ensure no lingering connections
 close_all_sessions()
@@ -22,6 +28,11 @@ def get_db():
         db.close()
 
 def get_metadata():
-    metadata = MetaData()
-    metadata.reflect(engine)
-    return metadata
+    try:
+        metadata = MetaData()
+        metadata.reflect(engine)
+        logger.info("Metadata retrieved successfully.")
+        return metadata
+    except SQLAlchemyError as e:
+        logger.error(f"Error reflecting metadata: {str(e)}")
+        raise RuntimeError("Error retrieving database metadata.")
