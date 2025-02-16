@@ -1,6 +1,6 @@
 from google import genai
 
-client = genai.Client(api_key="AIzaSyA3bDMjrM1pyDSFvLs8j0DH2rR0Xd11xRE")
+client = genai.Client(api_key="")
 
 schema_info = """{
   "metadata": [
