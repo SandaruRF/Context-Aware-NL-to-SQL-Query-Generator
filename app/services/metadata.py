@@ -6,6 +6,17 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# table names
+# columns
+# primary keys
+# foreign keys
+# column data types
+# indexes (for optimization, efficien query generation)
+# constraints (optimizaiton and accuracy)
+# relationships (for advanced queries) eg: one-to-many, many-to-many
+# table comments (for generate contextually accurate queries)
+# column comments (for generate contextually accurate queries)
+
 def fetch_db_metadata(db: Session):
     try:
         metadata = get_metadata()
